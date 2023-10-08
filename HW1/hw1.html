@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+</head>
+<body>
+    <canvas id="myContext" width="1000px" height="1000px"></canvas>
+</body>
+</html>
+
+<script>
+    let canvas = document.getElementById('myContext');
+
+    let ctx = canvas.getContext('2d');
+    ctx.lineWidth = 5;
+
+    //line
+    ctx.beginPath();
+
+    ctx.moveTo(50, 50);
+    ctx.lineTo(250, 50);
+
+    ctx.stroke();
+
+    //point
+    ctx.beginPath();
+
+    var radius = 3;
+    ctx.arc(50, 200, radius, 0, Math.PI * 2);
+    ctx.fill();
+
+    ctx.stroke();
+
+    //circle
+    ctx.beginPath();
+
+    ctx.arc(100, 350, 50, 0, 2 * 3.14);
+
+    ctx.stroke();
+
+    ctx.beginPath();
+
+    ctx.strokeRect(50, 500, 200, 100);
+</script>
