@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -29,12 +29,6 @@ namespace Homework1
 
             Brush brush = new SolidBrush(Color.Black);
 
-
-            // Disegna un cerchio al centro del form
-            int x_circle = this.Width / 2;
-            int y_circle = this.Height / 2;
-            int r_circle = 50;
-
             int x1_line = (this.Width / 2) - 100; 
             int y1_line = 100;
             int x2_line = (this.Width / 2) + 100;
@@ -42,6 +36,10 @@ namespace Homework1
 
             int x_point = (this.Width / 2);
             int y_point = 150;
+
+            int x_circle = this.Width / 2;
+            int y_circle = this.Height / 2;
+            int r_circle = 50;
 
             int x_rectangle = (this.Width / 2) - 100; 
             int y_rectangle = 325;
@@ -62,3 +60,4 @@ namespace Homework1
         }
     }
 }
+
