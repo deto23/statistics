@@ -1,0 +1,13 @@
+{
+  "version": 2,
+  "dgSpecHash": "+bAqW5WPH7PKZ+LnxBQlHr6UMz/bRPwGSrft8p/M8dNx/Vg24eBR4iFg+7hlXiK7LYxo5GePZy6s+PhAmSYHqg==",
+  "success": true,
+  "projectFilePath": "C:\\Users\\feder\\Desktop\\Homeworks\\Ex1\\Ex1\\Ex1.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\feder\\.nuget\\packages\\microsoft.windowsdesktop.app.ref\\6.0.23\\microsoft.windowsdesktop.app.ref.6.0.23.nupkg.sha512",
+    "C:\\Users\\feder\\.nuget\\packages\\microsoft.netcore.app.ref\\6.0.23\\microsoft.netcore.app.ref.6.0.23.nupkg.sha512",
+    "C:\\Users\\feder\\.nuget\\packages\\microsoft.aspnetcore.app.ref\\6.0.23\\microsoft.aspnetcore.app.ref.6.0.23.nupkg.sha512",
+    "C:\\Users\\feder\\.nuget\\packages\\microsoft.netcore.app.host.win-x64\\6.0.23\\microsoft.netcore.app.host.win-x64.6.0.23.nupkg.sha512"
+  ],
+  "logs": []
+}
