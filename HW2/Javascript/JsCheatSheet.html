@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JS CHEATSHEET</title>
+    <style>
+        .column {
+        float: left;
+        width: 50%;
+        }
+
+        /* Clear floats after the columns */
+        .row:after {
+        content: "";
+        display: table;
+        clear: both;
+        }
+    </style>
+</head>
+<body>
+    <div class="row">
+        <div class="column">
+            <pre>
+----ARRAY (List that can contain different type of data)-----
+
+----Loop--------------------------------------------
+
+var array = [1, 2, 3, 4, 5];                            
+for (var i = 0; i &lt array.length; i++) {
+    console.log(array[i]);
+}
+
+
+----Add element------------------------------------
+
+array.push(item1, item2, ..., itemN);
+
+
+----Add element in specific index------------------
+
+array.splice(startIndex, deleteCount, item1, item2, ..., itemN);  
+
+
+----Remove element---------------------------------
+
+array.pop();                       
+
+
+----Remove element in specific index---------------
+
+array.splice(startIndex, deleteCount);                        
+
+
+----Get element------------------------------------
+
+array.at(index);                        
+
+
+----Set element------------------------------------
+
+array[index] = newValue;    
+
+
+----Check element----------------------------------
+    
+array.includes(value, startIndex);               
+
+
+----DICTONARY----------------------------------------------------------
+
+----Loop--------------------------------------------                          
+
+var dictonary = {'a': 1, 'b': 2, 'c' : 3};
+for (const [key, value] of Object.entries(dictonary)) {
+    console.log(key, value);
+}
+
+
+----Add element------------------------------------
+
+dictonary['key'] = value
+
+
+----Add element in specific index------------------
+
+array.splice(startIndex, deleteCount, item1, item2, ..., itemN);  
+
+
+----Remove element---------------------------------
+
+array.pop();   
+
+
+----Remove element in specific index---------------
+
+array.splice(startIndex, deleteCount);                        
+
+
+----Get element------------------------------------
+
+array.at(index);                        
+
+
+----Set element------------------------------------
+
+array[index] = newValue;    
+
+
+----Check element----------------------------------
+    
+array.includes(value, startIndex); 
+
+
+----SORTED LIST------------------------------------
+
+
+----HASHSET (SET)----------------------------------
+
+----Loop--------------------------------------------
+
+var hashSet = new Set(["a","b","c"]);
+hashSet.forEach (function(value) {
+    console.log(value);
+});
+
+
+----Add element------------------------------------
+
+hashSet.add("d");
+    
+
+----Remove element---------------------------------
+    
+hashSet.delete("d");                      
+    
+
+----Remove all elements---------------------------------
+    
+hashSet.clear();                      
+    
+
+----Get element------------------------------------
+    
+const setIterator = hashSet.values();
+console.log(setIterator.next().value);                       
+    
+
+----Check element----------------------------------
+
+hashSet.has(value)  
+
+
+----SORTED SET-----------------------------------------
+
+
+
+----QUEUE-----------------------------------------------
+
+----Class:
+
+class Queue {
+constructor() {
+    this.elements = {};
+    this.head = 0;
+    this.tail = 0;
+}
+enqueue(element) {
+    this.elements[this.tail] = element;
+    this.tail++;
+}
+dequeue() {
+    const item = this.elements[this.head];
+    delete this.elements[this.head];
+    this.head++;
+    return item;
+}
+peek() {
+    return this.elements[this.head];
+}
+get length() {
+    return this.tail - this.head;
+}
+get isEmpty() {
+    return this.length === 0;
+}
+}
+        </pre>
+    </div>
+        <div class="column">
+            <pre>
+----STACK-----------------------------------------------
+
+----Class:
+
+class Stack {
+
+// Array is used to implement stack
+constructor()
+{
+    this.items = [];
+}
+
+push(element)
+{
+    // push element into the items
+    this.items.push(element);
+}
+
+pop()
+{
+    if (this.items.length == 0)
+        return "Underflow";
+        return this.items.pop();
+}
+
+peek()
+{
+    return this.items[this.items.length - 1];
+}
+
+isEmpty()
+{
+    return this.items.length == 0;
+}
+
+printStack()
+{
+    var str = "";
+    for (var i = 0; i < this.items.length; i++)
+        str += this.items[i] + " ";
+    return str;
+}
+
+
+
+
+----LINKED LIST-----------------------------------------------
+
+// User defined class node
+class Node {
+    // constructor
+    constructor(element)
+    {
+    this.element = element;
+    this.next = null
+    }
+}
+
+// linkedlist class
+class LinkedList {
+    constructor()
+    {
+    this.head = null;
+    this.size = 0;
+}
+
+// adds an element at the end of list
+add(element)
+{
+// creates a new node
+var node = new Node(element);
+
+// to store current node
+var current;
+
+// if list is Empty add the
+// element and make it head
+if (this.head == null)
+    this.head = node;
+else {
+    current = this.head;
+    while (current.next) {
+        current = current.next;
+}
+
+// add node
+current.next = node;
+}
+    this.size++;
+}
+
+// insert element at the position index of the list
+insertAt(element, index)
+{
+if (index < 0 || index > this.size)
+    return console.log("Please enter a valid index.");
+else {
+    // creates a new node
+    var node = new Node(element);
+    var curr, prev;
+
+    curr = this.head;
+
+    if (index == 0) {
+        node.next = this.head;
+        this.head = node;
+    } 
+    else {
+        curr = this.head;
+        var it = 0;
+
+        // iterate over the list to find
+        // the position to insert
+        while (it < index) {
+            it++;
+            prev = curr;
+            curr = curr.next;
+        }
+
+        // adding an element
+        node.next = curr;
+        prev.next = node;
+    }
+    this.size++;
+}
+}
+
+// removes an element from the specified location
+removeFrom(index)
+{
+if (index < 0 || index >= this.size)
+return console.log("Please Enter a valid index");
+else {
+var curr, prev, it = 0;
+curr = this.head;
+prev = curr;
+
+// deleting first element
+if (index === 0) {
+this.head = curr.next;
+} else {
+// iterate over the list to the
+// position to remove an element
+while (it < index) {
+    it++;
+    prev = curr;
+    curr = curr.next;
+}
+
+// remove the element
+prev.next = curr.next;
+}
+this.size--;
+
+// return the remove element
+return curr.element;
+}
+}
+
+// removes a given element from the list
+removeElement(element)
+{
+var current = this.head;
+var prev = null;
+
+// iterate over the list
+while (current != null) {
+// comparing element with current
+// element if found then remove the
+// and return true
+if (current.element === element) {
+if (prev == null) {
+    this.head = current.next;
+} else {
+    prev.next = current.next;
+}
+this.size--;
+return current.element;
+}
+prev = current;
+current = current.next;
+}
+return -1;
+}
+
+// finds the index of element
+indexOf(element)
+{
+var count = 0;
+var current = this.head;
+
+// iterate over the list
+while (current != null) {
+// compare each element of the list
+// with given element
+if (current.element === element)
+return count;
+count++;
+current = current.next;
+}
+
+// not found
+return -1;
+}
+
+// checks the list for empty
+isEmpty()
+{
+return this.size == 0;
+}
+
+// prints the list items
+printList()
+{
+var curr = this.head;
+var str = "";
+while (curr) {
+str += curr.element + " ";
+curr = curr.next;
+}
+console.log(str);
+}
+}
+            </pre>
+        </div>
+    </div>    
+</body>
+</html>
+
+
