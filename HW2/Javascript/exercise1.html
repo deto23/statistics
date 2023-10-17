@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Ex. 1</title>
+    </head>
+    <style>
+        div.split3 div{
+            float: left;
+            width: 25%;
+            width: 25%;
+            width: 25%;
+            width: 25%;
+            padding: 0 2%
+        }   
+    </style>
+    <body>
+        <input type="file" id="fileInput" accept=".csv">
+        <div class="split3">
+            <div>
+                <h2 id="qualitative"></h2>
+                <table id="outputTable1"></table>
+            </div>
+            <div>
+                <h2 id="quantitativeDiscrete"></h2>
+                <table id="outputTable2"></table>
+            </div>
+            <div>
+                <h2 id="quantitativeContinous"></h2>
+                <table id="outputTable3"></table>
+            </div>
+            <div>
+                <h2 id="joinDistribution"></h2>
+                <table id="outputTable4"></table>
+            </div>
+
+        <script>
+            function calculateFrequencyDistribution(columnName, dataSet){
+                const delimiter = /,| and /;
+                const valueCounts = {};
+
+                for (let i = 0; i < dataSet.length; i++) {
+                        const values = dataSet[i][columnName].split(delimiter).map(value => value.trim().toLowerCase());
+
+                        for (const value of values) {
+                            if (!valueCounts[value]) {
+                                valueCounts[value] = 1;
+                            } else {
+                                valueCounts[value]++;
+                            }
+                        }
+                }
+                return valueCounts;
+            }
+
+            function calculateFrequencyDistributionRange(columnName, dataSet, range){
+                const valueCounts = {};
+                for (let i = 0; i < range.length; i++) {
+                    valueCounts[range[i]] = 0;
+                }
+
+                for (let i = 0; i < dataSet.length; i++) {
+                    const value = dataSet[i][columnName];
+                    if(value == ''){
+                        valueCounts[range[0]] += 1;
+                    }
+                    if(value > 0 && value <= 50){
+                        valueCounts[range[1]] += 1;
+                    }
+                    else if(value > 50 && value <= 70){
+                        valueCounts[range[2]] += 1;
+                    }
+                    else if(value > 70 && value <= 90){
+                        valueCounts[range[3]] += 1;
+                    }
+                    else if(value > 90){
+                        valueCounts[range[4]] += 1;
+                    }
+
+                }
+                return valueCounts;
+            }
+
+            function calculateJointDistributionMatrix(columnName1, columnName2, dataSet) {
+                const index1 = [...new Set(dataSet.map(item => item[columnName1]))];
+                const index2 = [...new Set(dataSet.map(item => item[columnName2]))];
+
+                const matrix = [];
+
+                for (let i = 0; i < index1.length; i++) {
+                    matrix[i] = new Array(index2.length).fill(0);
+                }
+
+                for (let i = 0; i < dataSet.length; i++) {
+                    const value1 = dataSet[i][columnName1];
+                    const value2 = dataSet[i][columnName2];
+                    const rowIndex = index1.indexOf(value1);
+                    const colIndex = index2.indexOf(value2);
+
+                    matrix[rowIndex][colIndex]++;
+                }
+
+                return {
+                    values1: index1,
+                    values2: index2,
+                    matrix: matrix,
+                };
+            }
+
+            document.getElementById('fileInput').addEventListener('change', function (e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+
+                reader.onload = function (e) {
+                    const content = e.target.result;
+                    const lines = content.split('\n');
+                    const data = [];
+                    let headers = [];
+
+                    for (let i = 0; i < lines.length; i++) {
+                        const line = lines[i];
+                        if (line) {
+                            const columns = [];
+                            let value = '';
+                            let isInsideQuotes = false;
+
+                            for (let j = 0; j < line.length; j++) {
+                                const char = line[j];
+
+                                if (char === '"') {
+                                    isInsideQuotes = !isInsideQuotes;
+                                } else if (char === ',' && !isInsideQuotes) {
+                                    columns.push(value.trim());
+                                    value = '';
+                                } else {
+                                    value += char;
+                                }
+                            }
+
+                            columns.push(value.trim());
+
+                            if (i === 0) {
+                                headers = columns;
+                            } else {
+                                const record = {};
+
+                                for (let j = 0; j < headers.length; j++) {
+                                    let columnHeader = headers[j];
+                                    let columnValue = columns[j];
+
+                                    if (columnValue && columnValue.startsWith('"') && columnValue.endsWith('"')) {
+                                        columnValue = columnValue.slice(1, -1);
+                                    }
+
+                                    record[columnHeader] = columnValue;
+                                }
+
+
+                                data.push(record);
+                            }
+                        }
+
+                    }
+
+                    const columnNameQualitative = 'Main hobbies';
+                    const valueCountsQualitativeVariable = calculateFrequencyDistribution(columnNameQualitative, data);
+
+                    document.getElementById('qualitative').innerHTML = columnNameQualitative;
+
+
+                    const columnNameDiscrete = 'Hard Worker (0-5)';
+                    const valueCountsQuantitativeDiscreteVariable = calculateFrequencyDistribution(columnNameDiscrete, data);
+
+                    document.getElementById('quantitativeDiscrete').innerHTML = columnNameDiscrete;
+
+                    range = [
+                    'null',
+                    '<=50',
+                    '50-70',
+                    '70-90',
+                    '90+'
+                    ];
+
+                    const columnNameContinous = 'weight';
+                    const valueCountsQuatitativeContinousVariable = calculateFrequencyDistributionRange(columnNameContinous, data, range);
+
+                    document.getElementById('quantitativeContinous').innerHTML = columnNameContinous;
+
+
+                    //joint distribution
+                    const columnName1 = 'Hard Worker (0-5)';
+                    const columnName2 = 'Age';
+                    const valueCountsJointDistribution = calculateJointDistributionMatrix(columnName1, columnName2, data);
+                    console.log(valueCountsJointDistribution);
+
+                    document.getElementById('joinDistribution').innerHTML = 'Joint Distribution ('+columnName1+'-'+columnName2+')';
+
+
+                    let totalFrequencyQualitativeVariable = 0;
+                    for (const key in valueCountsQualitativeVariable) {
+                        totalFrequencyQualitativeVariable += valueCountsQualitativeVariable[key];
+                    }
+
+                    let totalFrequencyQuantitativeDiscreteVariable = 0;
+                    for (const key in valueCountsQuantitativeDiscreteVariable) {
+                        totalFrequencyQuantitativeDiscreteVariable += valueCountsQuantitativeDiscreteVariable[key];
+                    }
+
+                    let totalFrequencyQuatitativeContinousVariable = 0;
+                    for (const key in valueCountsQuatitativeContinousVariable) {
+                        totalFrequencyQuatitativeContinousVariable += valueCountsQuatitativeContinousVariable[key];
+                    }
+
+                    let totalFrequencyJointDistribution = 0;
+                    for (let i = 0; i < valueCountsJointDistribution.matrix.length; i++) {
+                        for (let j = 0; j < valueCountsJointDistribution.matrix[i].length; j++) {
+                            totalFrequencyJointDistribution += valueCountsJointDistribution.matrix[i][j];
+                        }
+                    }
+
+                    const tableQualitativeVariable = document.getElementById('outputTable1');
+                    tableQualitativeVariable.innerHTML = '<tr><th>Value</th><th>Percentage</th></tr>';
+                    for (const key in valueCountsQualitativeVariable) {
+                        const frequencyQualitativeVariable = valueCountsQualitativeVariable[key];
+                        const relativeFrequencyQualitativeVariable = frequencyQualitativeVariable / totalFrequencyQualitativeVariable;
+                        const percentageQualitativeVariable = (relativeFrequencyQualitativeVariable * 100).toFixed(2);
+                        tableQualitativeVariable.innerHTML += `<tr><td>${key}</td><td>${percentageQualitativeVariable}%</td></tr>`;
+                    }
+                    
+                    const tableQuantitativeDiscreteVariable = document.getElementById('outputTable2');
+                    tableQuantitativeDiscreteVariable.innerHTML = '<tr><th>Value</th><th>Percentage</th></tr>';
+                    for (const key in valueCountsQuantitativeDiscreteVariable) {
+                        const frequencyQuantitativeDiscreteVariable = valueCountsQuantitativeDiscreteVariable[key];
+                        const relativeFrequencyQuantitativeDiscreteVariable = frequencyQuantitativeDiscreteVariable / totalFrequencyQuantitativeDiscreteVariable;
+                        const percentageQuantitativeDiscreteVariable = (relativeFrequencyQuantitativeDiscreteVariable * 100).toFixed(2);
+                        tableQuantitativeDiscreteVariable.innerHTML += `<tr><td>${key}</td><td>${percentageQuantitativeDiscreteVariable}%</td></tr>`;
+                    }
+
+                    const tableQuatitativeContinousVariable = document.getElementById('outputTable3');
+                    tableQuatitativeContinousVariable.innerHTML = '<tr><th>Value</th><th>Percentage</th></tr>';
+                    for (const key in valueCountsQuatitativeContinousVariable) {
+                        const frequencyQuatitativeContinousVariable = valueCountsQuatitativeContinousVariable[key];
+                        const relativeFrequencyQuatitativeContinousVariable = frequencyQuatitativeContinousVariable / totalFrequencyQuatitativeContinousVariable;
+                        const percentageQuatitativeContinousVariable = (relativeFrequencyQuatitativeContinousVariable * 100).toFixed(2);
+                        tableQuatitativeContinousVariable.innerHTML += `<tr><td>${key}</td><td>${percentageQuatitativeContinousVariable}%</td></tr>`;
+                    }
+
+                    
+                    const tableJointDistribution = document.getElementById('outputTable4');
+                    const values1 = valueCountsJointDistribution.values1.sort();
+                    const values2 = valueCountsJointDistribution.values2.sort();
+
+                    let tableContent = '<tr><th></th>';
+
+                    for (let j = 0; j < values2.length; j++) {
+                        tableContent += `<th>${values2[j]}</th>`;
+                    }
+
+                    tableContent += '</tr>';
+
+                    for (let i = 0; i < values1.length; i++) {
+                        tableContent += '<tr>';
+                        tableContent += `<th>${values1[i]}</th>`;
+                        for (let j = 0; j < values2.length; j++) {
+                            tableContent += `<td>${((valueCountsJointDistribution.matrix[i][j]/totalFrequencyJointDistribution)*100).toFixed(2)}%</td>`;
+                        }
+                        tableContent += '</tr>';
+                    }
+
+                    tableJointDistribution.innerHTML = tableContent;
+
+
+                                
+                }
+                reader.readAsText(file);
+            }
+        });
+
+        </script>
+    </body>
+</html>
