@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <title>Distribution</title>
+</head>
+<style>
+    #container {
+        display: flex;
+    }
+
+    #canvas-container {
+        flex: 4;
+
+    }
+    #data-table {
+        flex: 1;
+        margin-left: 10px;
+        margin-right: 20px;
+    }
+    table {
+            border-collapse: collapse;
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+
+        th, td {
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+</style>
+<body>
+    <div id="container">
+        <div id="data-table">
+            <h2>Table</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Interval</th>
+                        <th>Frequency</th>
+                    </tr>
+                </thead>
+                <tbody id="table-body">
+                </tbody>
+            </table>
+        </div>
+        <div id="canvas-container">
+            <canvas id="histogram"></canvas>
+        </div>
+
+    </div>
+    <script>
+        const list = [];
+const dict = {};
+const n = 100000;
+const k = 20;
+
+for (let i = 0; i < n; i++) {
+    list.push(Math.random());
+}
+
+for (let i = 1; i <= k; i++) {
+    dict[i / k] = 0;
+    for (let j = 0; j < n; j++) {
+        if (list[j] > (i - 1) / k && list[j] <= i / k) {
+            dict[i / k]++;
+        }
+    }
+}
+
+// Estrai i valori del dizionario
+const counts = Object.values(dict);
+
+// Calcola i punti medi degli intervalli
+const intervals = Array.from({ length: k }, (_, i) => (i + 1) / k);
+
+// Calcola la larghezza delle colonne
+const columnWidth = intervals[1] - intervals[0];
+
+// Calcola i punti medi
+const midpoints = intervals.map(interval => interval + columnWidth / 2);
+
+// Crea l'istogramma
+const ctx = document.getElementById('histogram').getContext('2d');
+const canvasContainer = document.getElementById('canvas-container');
+
+
+
+const histogram = new Chart(ctx, {
+    type: 'bar',
+    data: {
+        labels: intervals,
+        datasets: [{
+            label: 'Frequency',
+            data: counts,
+        }],
+    },
+    options: {
+        scales: {
+            x: [{
+                ticks: {
+                    callback: value => value.toFixed(2),
+                },
+            }],
+        },
+        responsive: true,
+        maintainAspectRatio: false, // Per consentire l'adattamento
+    },
+});
+
+const sortedKeys = Object.keys(dict).map(parseFloat).sort((a, b) => a - b);
+
+ // Inserisci i dati nella tabella
+ const tableBody = document.getElementById("table-body");
+        for (let key of sortedKeys) {
+            const row = tableBody.insertRow(-1);
+            const cell1 = row.insertCell(0);
+            const cell2 = row.insertCell(1);
+            cell1.textContent = `${(key - 1 / k).toFixed(2)} - ${key.toFixed(2)}`;
+            cell2.textContent = dict[key];
+        }
+
+    </script>
+</body>
+</html>
