@@ -2,7 +2,6 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <title>Distribution</title>
 </head>
 <style>
@@ -12,31 +11,37 @@
 
     #canvas-container {
         flex: 4;
-
+        display: flex;
+        align-items: flex-end;
+        margin-left: 20px;
     }
+
+    #histogram {
+        flex-grow: 1;
+    }
+
     #data-table {
         flex: 1;
-        margin-left: 10px;
-        margin-right: 20px;
     }
+
     table {
-            border-collapse: collapse;
-            width: 100%;
-            margin-top: 20px;
-        }
+        border-collapse: collapse;
+        width: 100%;
+        margin-top: 20px;
+    }
 
-        table, th, td {
-            border: 1px solid #ddd;
-        }
+    table, th, td {
+        border: 1px solid #ddd;
+    }
 
-        th, td {
-            padding: 8px;
-            text-align: left;
-        }
+    th, td {
+        padding: 8px;
+        text-align: left;
+    }
 
-        th {
-            background-color: #f2f2f2;
-        }
+    th {
+        background-color: #f2f2f2;
+    }
 </style>
 <body>
     <div id="container">
@@ -56,71 +61,57 @@
         <div id="canvas-container">
             <canvas id="histogram"></canvas>
         </div>
-
     </div>
     <script>
         const list = [];
-const dict = {};
-const n = 100000;
-const k = 20;
+        const dict = {};
+        const n = 100;
+        const k = 10;
 
-for (let i = 0; i < n; i++) {
-    list.push(Math.random());
-}
-
-for (let i = 1; i <= k; i++) {
-    dict[i / k] = 0;
-    for (let j = 0; j < n; j++) {
-        if (list[j] > (i - 1) / k && list[j] <= i / k) {
-            dict[i / k]++;
+        for (let i = 0; i < n; i++) {
+            list.push(Math.random());
         }
-    }
-}
 
-// Estrai i valori del dizionario
-const counts = Object.values(dict);
+        for (let i = 1; i <= k; i++) {
+            dict[i / k] = 0;
+            for (let j = 0; j < n; j++) {
+                if (list[j] > (i - 1) / k && list[j] <= i / k) {
+                    dict[i / k]++;
+                }
+            }
+        }
 
-// Calcola i punti medi degli intervalli
-const intervals = Array.from({ length: k }, (_, i) => (i + 1) / k);
+        const sortedKeys = Object.keys(dict).map(parseFloat).sort((a, b) => a - b);
 
-// Calcola la larghezza delle colonne
-const columnWidth = intervals[1] - intervals[0];
+        // Crea il canvas per l'istogramma
+        const canvas = document.getElementById('histogram');
+        const ctx = canvas.getContext('2d');
 
-// Calcola i punti medi
-const midpoints = intervals.map(interval => interval + columnWidth / 2);
+        // Calcola la larghezza delle colonne in base al numero di colonne
+        const columnWidth = canvas.width / k;
 
-// Crea l'istogramma
-const ctx = document.getElementById('histogram').getContext('2d');
-const canvasContainer = document.getElementById('canvas-container');
+        // Aggiungi un margine tra le colonne
+        const columnMargin = 10;
 
+        // Calcola la larghezza effettiva delle colonne
+        const effectiveColumnWidth = (canvas.width - (k - 1) * columnMargin) / k;
 
+        // Calcola l'altezza massima per le colonne
+        const maxCount = Math.max(...Object.values(dict));
 
-const histogram = new Chart(ctx, {
-    type: 'bar',
-    data: {
-        labels: intervals,
-        datasets: [{
-            label: 'Frequency',
-            data: counts,
-        }],
-    },
-    options: {
-        scales: {
-            x: [{
-                ticks: {
-                    callback: value => value.toFixed(2),
-                },
-            }],
-        },
-        responsive: true,
-        maintainAspectRatio: false, // Per consentire l'adattamento
-    },
-});
+        // Disegna l'istogramma con colonne separate
+        for (let i = 0; i < sortedKeys.length; i++) {
+            const key = sortedKeys[i];
+            const count = dict[key];
+            const x = i * (effectiveColumnWidth + columnMargin);
+            const columnHeight = (count / maxCount) * canvas.height;
 
-const sortedKeys = Object.keys(dict).map(parseFloat).sort((a, b) => a - b);
+            ctx.fillStyle = 'blue';
+            ctx.fillRect(x, canvas.height - columnHeight, effectiveColumnWidth, columnHeight);
+        }
 
- // Inserisci i dati nella tabella
- const tableBody = document.getElementById("table-body");
+        // Inserisci i dati nella tabella
+        const tableBody = document.getElementById("table-body");
         for (let key of sortedKeys) {
             const row = tableBody.insertRow(-1);
             const cell1 = row.insertCell(0);
@@ -128,7 +119,6 @@ const sortedKeys = Object.keys(dict).map(parseFloat).sort((a, b) => a - b);
             cell1.textContent = `${(key - 1 / k).toFixed(2)} - ${key.toFixed(2)}`;
             cell2.textContent = dict[key];
         }
-
     </script>
 </body>
 </html>
