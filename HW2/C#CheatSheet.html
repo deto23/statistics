@@ -1,1 +1,177 @@
+----ARRAY-----
 
+----Loop--------------------------------------------
+
+string[] array = {1, 2, 3, 4};                           
+for (int i = 0; i < array.Length; i++) {
+    Console.WriteLine(array[i]);
+}                       
+
+----Set element------------------------------------
+
+array[0] = 0;    
+             
+
+
+----DICTONARY----------------------------------------------------------
+IDictionary<int, string> numberNames = new Dictionary<int, string>();
+  
+----Loop--------------------------------------------                          
+  
+foreach(KeyValuePair<int, string> kvp in numberNames)
+    Console.WriteLine("Key: {0}, Value: {1}", kvp.Key, kvp.Value);
+
+
+----Add element------------------------------------
+
+numberNames.Add(1,"One"); 
+
+
+----Remove element---------------------------------
+
+numberNames.Remove(1); //with key                        
+
+
+----Get element------------------------------------
+
+Console.WriteLine(numberNames[1]);                          
+
+
+----Check element----------------------------------
+    
+numberNames.ContainsKey(1);
+
+
+----SORTED LIST------------------------------------
+
+
+SortedList list_name = new SortedList();
+  
+----Loop--------------------------------------------
+
+
+for (int x = 0; x < my_slist1.Count; x++)
+{
+	Console.WriteLine("{0} and {1}", 
+				my_slist1.GetKey(x), 
+		my_slist1.GetByIndex(x));
+}
+
+OTHER METHOD LIKE A DICTONARY
+
+----HASHSET (SET)----------------------------------
+  
+HashSet<Type_of_hashset> Hashset_name = new HashSet<Type_of_hashset>();
+  
+----Loop--------------------------------------------
+
+foreach(var val in myhash1)
+{
+    Console.WriteLine(val);
+}
+
+
+----Add element------------------------------------
+
+myhash1.Add("C");
+    
+
+----Remove element---------------------------------
+    
+myhash.Remove("Ruby");                       
+
+
+----SORTED SET-----------------------------------------
+
+
+
+----QUEUE-----------------------------------------------
+
+Queue<string> fruits = new Queue<string>();
+  
+----Loop--------------------------------------------                          
+  
+foreach (string item in fruits)
+{
+  Console.WriteLine(item);
+}
+
+
+----Add element------------------------------------
+
+fruits.Enqueue("Apple"); 
+
+
+----Remove element---------------------------------
+
+// removes element from the beginning of the colors queue 
+var removedElement = colors.Dequeue();                       
+
+
+----Get element------------------------------------
+
+Console.WriteLine("Element at beginning of queue: " + planet.Peek());                         
+
+
+----STACK-----------------------------------------------
+
+Stack<int> myStack = new Stack<int>();
+    
+----Loop--------------------------------------------                          
+  
+foreach (var item in myStack)
+  Console.Write(item + ",");
+
+
+----Add element------------------------------------
+
+myStack.Push(1);
+
+
+----Remove element---------------------------------
+
+myStack.Pop()                     
+
+
+----Get element------------------------------------
+
+myStack.Peek()
+
+
+----Check element----------------------------------
+
+myStack.Contains(2);
+
+
+
+
+----LINKED LIST-----------------------------------------------
+
+LinkedList <Type_of_linkedlist> linkedlist_name = new LinkedList <Type_of_linkedlist>();
+
+----Loop--------------------------------------------                          
+  
+foreach(string str in my_list)
+{
+  Console.WriteLine(str);
+}
+
+----Add element------------------------------------
+
+my_list.AddLast("Zoya");
+
+
+----Remove element---------------------------------
+
+my_list.Clear();  
+  
+my_list.Remove("Rohit");
+
+my_list.RemoveFirst();
+
+my_list.RemoveLast();
+
+
+----Check element----------------------------------
+
+my_list.Contains("Shilpa")
