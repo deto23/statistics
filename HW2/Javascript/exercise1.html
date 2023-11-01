@@ -49,11 +49,31 @@
                             }
                         }
                 }
-                return valueCounts;
+                const uniqueValues = Object.keys(valueCounts).sort();
+
+                const sortedValueCounts = {};
+                for (const value of uniqueValues) {
+                    sortedValueCounts[value] = valueCounts[value];
+                }
+
+                return sortedValueCounts;
             }
 
             function calculateFrequencyDistributionRange(columnName, dataSet, range){
                 const valueCounts = {};
+
+                /*
+                let max = 0, min = 0;
+                for (let i = 0; i < dataSet.length; i++) {
+                    if(dataSet[i][columnName] > max ){
+                        max = dataSet[i][columnName];
+                    }
+                    if(dataSet[i][columnName] <= min){
+                        min = dataSet[i][columnName];
+                    }
+                }
+                */
+
                 for (let i = 0; i < range.length; i++) {
                     valueCounts[range[i]] = 0;
                 }
@@ -247,8 +267,8 @@
 
                     
                     const tableJointDistribution = document.getElementById('outputTable4');
-                    const values1 = valueCountsJointDistribution.values1.sort();
-                    const values2 = valueCountsJointDistribution.values2.sort();
+                    const values1 = valueCountsJointDistribution.values1;
+                    const values2 = valueCountsJointDistribution.values2;
 
                     let tableContent = '<tr><th></th>';
 
