@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 
 class Program
 {
@@ -49,16 +50,12 @@ class Program
 
         var valuesCountQuantitativeDiscreteVariable = new Dictionary<string, int>();
 
-        var valuesCountQuantitativeContinuousVariable = new Dictionary<string, int>();
+        var valuesCountQuantitativeContinuousVariable = new Dictionary<double, int>();
 
-        var range = new List<string>()
-                    {
-                    "null",
-                    "<=50",
-                    "50-70",
-                    "70-90",
-                    "90+"
-                    };
+        int numIntervals = 3;
+        double max = 0;
+        double min = 0;
+        double intervalWidth = 0;
 
         foreach (var row in data)
         {
@@ -91,62 +88,68 @@ class Program
                 }
                 if (kvp.Key == quantitativeContinuousVariable)
                 {
-                    if (kvp.Value == "")
+                    string valueString = kvp.Value;
+                    double value;
+                    if (double.TryParse(valueString, out value))
                     {
-                        if (valuesCountQuantitativeContinuousVariable.ContainsKey(range[0]))
-                        {
-                            valuesCountQuantitativeContinuousVariable[range[0]] += 1;
-                        }
-                        else
-                        {
-                            valuesCountQuantitativeContinuousVariable[range[0]] = 1;
-                        }
+                        Console.WriteLine("Conversione riuscita");
                     }
-                    else if (int.Parse(kvp.Value) > 0 && int.Parse(kvp.Value) <= 50)
+                    else
                     {
-                        if (valuesCountQuantitativeContinuousVariable.ContainsKey(range[1]))
-                        {
-                            valuesCountQuantitativeContinuousVariable[range[1]] += 1;
-                        }
-                        else
-                        {
-                            valuesCountQuantitativeContinuousVariable[range[1]] = 1;
-                        }
+                        Console.WriteLine("Conversione fallita. Utilizzo del valore predefinito: " + value);
                     }
-                    else if (int.Parse(kvp.Value) > 50 && int.Parse(kvp.Value) <= 70)
+
+                    if (value > max)
                     {
-                        if (valuesCountQuantitativeContinuousVariable.ContainsKey(range[2]))
-                        {
-                            valuesCountQuantitativeContinuousVariable[range[2]] += 1;
-                        }
-                        else
-                        {
-                            valuesCountQuantitativeContinuousVariable[range[2]] = 1;
-                        }
+                        max = value;
                     }
-                    else if (int.Parse(kvp.Value) > 70 && int.Parse(kvp.Value) <= 90)
+                    if (value <= min)
                     {
-                        if (valuesCountQuantitativeContinuousVariable.ContainsKey(range[3]))
-                        {
-                            valuesCountQuantitativeContinuousVariable[range[3]] += 1;
-                        }
-                        else
-                        {
-                            valuesCountQuantitativeContinuousVariable[range[3]] = 1;
-                        }
+                        min = value;
                     }
-                    else if (int.Parse(kvp.Value) > 90)
+
+                }
+            }
+        }
+        foreach (var row in data)
+        {
+            foreach (var kvp in row)
+            {
+                if (kvp.Key == quantitativeContinuousVariable)
+                {
+                    intervalWidth = (max - min) / numIntervals;
+
+                    for (int i = 0; i < numIntervals; i++)
                     {
-                        if (valuesCountQuantitativeContinuousVariable.ContainsKey(range[4]))
+                        double intervalStart = min + i * intervalWidth;
+                        double intervalEnd = intervalStart + intervalWidth;
+
+                        string valueString = kvp.Value;
+                        double value;
+                        if (double.TryParse(valueString, out value))
                         {
-                            valuesCountQuantitativeContinuousVariable[range[4]] += 1;
+                            Console.WriteLine("Conversione riuscita");
                         }
                         else
                         {
-                            valuesCountQuantitativeContinuousVariable[range[4]] = 1;
+                            Console.WriteLine("Conversione fallita. Utilizzo del valore predefinito: " + value);
+                        }
+
+                        if (value >= intervalStart && value < intervalEnd)
+
+                        {
+                            if (valuesCountQuantitativeContinuousVariable.ContainsKey(intervalStart))
+                            {
+                                valuesCountQuantitativeContinuousVariable[intervalStart] += 1;
+                            }
+                            else
+                            {
+                                valuesCountQuantitativeContinuousVariable[intervalStart] = 1;
+                            }
                         }
                     }
                     totalFrequencyQuantitativeContinuousVariable += 1;
+
                 }
 
             }
@@ -176,7 +179,9 @@ class Program
 
         Console.WriteLine("Frequency Distribution of Quantitative Continuous Variable");
 
-        foreach (var kvp in valuesCountQuantitativeContinuousVariable)
+        var sortedValuesCountQuantitativeContinuousVariable = valuesCountQuantitativeContinuousVariable.OrderBy(kvp => kvp.Key).ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+
+        foreach (var kvp in sortedValuesCountQuantitativeContinuousVariable)
         {
 
             Console.WriteLine($"Range: {kvp.Key}, Frequency: {kvp.Value}");
