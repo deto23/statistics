@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.IO;
@@ -154,7 +154,9 @@ class Program
 
         Console.WriteLine("Frequency Distribution of Qualitative Variable");
 
-        foreach (var kvp in valuesCountsQualitativeVariable)
+        var sortedValuesCountsQualitativeVariable = valuesCountsQualitativeVariable.OrderBy(kvp => kvp.Key).ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+
+        foreach (var kvp in sortedValuesCountsQualitativeVariable)
         {
             Console.WriteLine($"Value: {kvp.Key}, Frequency: {kvp.Value}");
         }
