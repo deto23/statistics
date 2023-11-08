@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <style>
+        canvas {
+            background-color: Ivory;
+            border: 1px solid Green;
+            vertical-align: top;
+        }
+
+        input {
+            width: 60px;
+            text-align: left;
+        }
+        
+    </style>
+</head>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
+
+<body>
+    <p><label for="inputServers">M (number of Servers):</label>
+        <input id="inputServers" type="number" value="10" min="1" max="100" step="1">
+    </p>
+    <p><label for="inputTime">T (period of Time):</label>
+        <input id="inputTime" type="number" value="1" min="1" max="5" step="1">
+    </p>
+    <p><label for="inputIntervals">N (number of Intervals):</label>
+        <input id="inputIntervals" type="number" value="100" min="50" max="500" step="1">
+    </p>
+    <p><label for="inputLambda">lambda:</label>
+        <input id="inputLambda" type="number" value="50" min="50" max="150" step="1">
+    </p>
+    <p><label for="inputNthInterval">Nth Interval:</label>
+      <input id="inputNthInterval" type="number" value="1" min="1" max="500" step="1">
+  </p>
+    <div style="display: flex;">
+        <canvas id="myCanvas" style="width: 100%; max-width: 700px; margin: 5px;" oncontextmenu="return false"></canvas>
+        <canvas id="histogramChart" style="width: 100%; max-width: 700px; margin: 5px;"></canvas>
+    </div>
+
+    <script>
+      const myCanvas = document.getElementById("myCanvas");
+      const ctx = myCanvas.getContext("2d");
+
+      const myCanvas2 = document.getElementById("histogramChart");
+
+      myCanvas.addEventListener("mouseenter", function () {
+        myCanvas.style.pointerEvents = "none";
+      });
+
+      myCanvas2.addEventListener("mouseenter", function () {
+        myCanvas2.style.pointerEvents = "none";
+      });
+
+      let yAxesHistogram = [];
+      let xAxesHistogram = [];
+      let xAxesHistogramIntervalN = [];
+
+      let histogram = document
+        .getElementById("histogramChart")
+        .getContext("2d");
+
+      //const histogramChart = document.getElementById("histogramChart");
+
+      const N = document.getElementById("inputIntervals");
+      const l = document.getElementById("inputLambda");
+      const M = document.getElementById("inputServers");
+      const T = document.getElementById("inputTime");
+      const intervalNumber = document.getElementById("inputNthInterval");
+
+      const colorSystems = [];
+      let listAttacks = 0;
+
+      let set = 0;
+
+      let xValues = Array.from({ length: N.value }, (_, i) => i);
+
+      let inputs = [N, l, T, M];
+
+      inputs.forEach((input) => {
+        input.addEventListener("input", () => {
+          ReloadAttacks();
+        });
+      });
+
+      intervalNumber.addEventListener("input", () => {
+        calculateFrequency();
+      });
+
+      ReloadAttacks();
+
+      function ReloadAttacks() {
+        let numberIntervals = N.value;
+        let probability = l.value * T.value / N.value;
+        let numberServers = M.value;
+
+        xValues = Array.from({ length: numberIntervals }, (_, i) => i);
+
+        listAttacks = generateAttacks(
+          numberIntervals,
+          probability,
+          numberServers
+        );
+
+        setInterval(drawChart(listAttacks, numberServers, "myCanvas"), 500);
+      }
+
+      function generateAttacks(numberIntervals, probability, numberServers) {
+        const allAttacks = [];
+
+        for (let j = 0; j < numberServers; j++) {
+          const yValues = [0];
+          let sumAttacks = 0;
+
+          for (let i = 1; i < numberIntervals; i++) {
+            if (Math.random() >= probability) {
+              sumAttacks += 1;
+            } else {
+              sumAttacks -= 1;
+            }
+            yValues.push(sumAttacks);
+          }
+          allAttacks.push(yValues);
+        }
+
+        return allAttacks;
+      }
+
+      function drawChart(attacks, systems, chartID) {
+        ctx.clearRect(0, 0, chartID.width, chartID.height);
+
+        const datasets = [];
+
+        //Colors of Systems
+        for (let i = set; i < M.value; i++) {
+          const randomColor = getRandomRGBAColor();
+          colorSystems.push(randomColor);
+          set++;
+        }
+
+        for (let i = 0; i < systems; i++) {
+          datasets.push({
+            label: `System ${i + 1}`,
+            fill: false,
+            backgroundColor: colorSystems[i],
+            borderColor: colorSystems[i],
+            data: attacks[i],
+          });
+        }
+
+        const myChart = new Chart(chartID, {
+          type: "line",
+          data: {
+            labels: xValues,
+            datasets: datasets,
+          },
+          options: {
+            responsive: true,
+            elements: {
+              line: {
+                tension: 0.1,
+              },
+            },
+            legend: {
+            display: false,
+            },
+            tooltips: {
+                enabled: false,
+            }
+          },
+
+        });
+      }
+
+      function getRandomRGBAColor() {
+        const r = Math.floor(Math.random() * 256); // Random red component (0-255)
+        const g = Math.floor(Math.random() * 256); // Random green component (0-255)
+        const b = Math.floor(Math.random() * 256); // Random blue component (0-255)
+        const a = Math.random(); // Random alpha component (0-1)
+
+        return `rgba(${r}, ${g}, ${b}, ${a})`;
+      }
+
+      //   -----------------------------------
+      // Get the canvas histogram element
+
+      calculateFrequency();
+
+      function calculateFrequency() {
+
+        xAxesHistogram = [];
+        yAxesHistogram = [];
+        xAxesHistogramIntervalN = [];
+
+        let lastValues = listAttacks.map((arr) => arr[arr.length - 1]);
+        let nthAttack = listAttacks.map((arr) => arr[intervalNumber.value]);
+
+        let tempList = [];
+        let tempMax = [];
+        let tempMin = [];
+
+        for (let i = 0; i < listAttacks[0].length; i++) {
+          tempList = listAttacks.map((arr) => (i < arr.length ? arr[i] : 0));
+          tempMax.push(Math.max(...tempList));
+          tempMin.push(Math.min(...tempList));
+        }
+
+        let max = Math.max(...tempMax);
+        let min = Math.min(...tempMin);
+
+        console.log("max:",max, "min:",min);
+
+        for (let i = max; i >= min; i--) {
+          yAxesHistogram.push(i);
+        }
+        xAxesHistogram = new Array(yAxesHistogram.length).fill(0);
+        xAxesHistogramAttackN = new Array(yAxesHistogram.length).fill(0);
+
+        for (let i = 0; i < yAxesHistogram.length; i++) {
+          for (let j = 0; j < lastValues.length; j++) {
+            if (yAxesHistogram[i] == lastValues[j]) {
+              xAxesHistogram[i]++;
+            }
+            if (yAxesHistogram[i] == nthAttack[j]) {
+              xAxesHistogramAttackN[i]++;
+            }
+          }
+        }
+
+        // Sample data for the histogram
+        let data = {
+          labels: yAxesHistogram,
+          datasets: [
+            {
+              label: "Last Interval",
+              data: xAxesHistogram,
+              backgroundColor: getRandomRGBAColor(),
+              borderWidth: 1,
+            },
+            {
+              label: intervalNumber.value + "-th Interval",
+              data: xAxesHistogramAttackN,
+              backgroundColor: getRandomRGBAColor(),
+              borderWidth: 1,
+            },
+          ],
+        };
+
+        // Create the histogram chart
+        let horizontalHistogram = new Chart(histogram, {
+          type: "horizontalBar", // Set the chart type to "horizontalBar"
+          data: data,
+          options: {
+            indexAxis: "y", // Set the index axis to 'y' for horizontal bars
+            scales: {
+              xAxes: [
+                {
+                  ticks: {
+                    min: 0,
+                  },
+                },
+              ],
+            },
+          },
+        });
+      }
+    </script>
+  </body>
+</html>
