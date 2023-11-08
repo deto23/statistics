@@ -1,0 +1,10 @@
+C:\Users\feder\Desktop\Homeworks\hw5\hw5\bin\Debug\hw5.exe.config
+C:\Users\feder\Desktop\Homeworks\hw5\hw5\bin\Debug\hw5.exe
+C:\Users\feder\Desktop\Homeworks\hw5\hw5\bin\Debug\hw5.pdb
+C:\Users\feder\Desktop\Homeworks\hw5\hw5\obj\Debug\hw5.csproj.AssemblyReference.cache
+C:\Users\feder\Desktop\Homeworks\hw5\hw5\obj\Debug\hw5.Form1.resources
+C:\Users\feder\Desktop\Homeworks\hw5\hw5\obj\Debug\hw5.Properties.Resources.resources
+C:\Users\feder\Desktop\Homeworks\hw5\hw5\obj\Debug\hw5.csproj.GenerateResource.cache
+C:\Users\feder\Desktop\Homeworks\hw5\hw5\obj\Debug\hw5.csproj.CoreCompileInputs.cache
+C:\Users\feder\Desktop\Homeworks\hw5\hw5\obj\Debug\hw5.exe
+C:\Users\feder\Desktop\Homeworks\hw5\hw5\obj\Debug\hw5.pdb
