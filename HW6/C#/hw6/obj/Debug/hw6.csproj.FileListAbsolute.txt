@@ -1,0 +1,10 @@
+C:\Users\feder\Desktop\Homeworks\hw6\hw6\bin\Debug\hw6.exe.config
+C:\Users\feder\Desktop\Homeworks\hw6\hw6\bin\Debug\hw6.exe
+C:\Users\feder\Desktop\Homeworks\hw6\hw6\bin\Debug\hw6.pdb
+C:\Users\feder\Desktop\Homeworks\hw6\hw6\obj\Debug\hw6.csproj.AssemblyReference.cache
+C:\Users\feder\Desktop\Homeworks\hw6\hw6\obj\Debug\hw6.Form1.resources
+C:\Users\feder\Desktop\Homeworks\hw6\hw6\obj\Debug\hw6.Properties.Resources.resources
+C:\Users\feder\Desktop\Homeworks\hw6\hw6\obj\Debug\hw6.csproj.GenerateResource.cache
+C:\Users\feder\Desktop\Homeworks\hw6\hw6\obj\Debug\hw6.csproj.CoreCompileInputs.cache
+C:\Users\feder\Desktop\Homeworks\hw6\hw6\obj\Debug\hw6.exe
+C:\Users\feder\Desktop\Homeworks\hw6\hw6\obj\Debug\hw6.pdb
