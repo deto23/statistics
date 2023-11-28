@@ -1,0 +1,48 @@
+body {
+    font-family: "Arial", sans-serif;
+    font-size: 16px;
+    color: #333;
+    background-color: rgba(211, 211, 199, 0.562);
+  }
+
+.chart {
+    position: absolute;
+    border: 1px solid #ccc;
+    overflow: hidden;
+    background-color: #ffffff;
+}
+
+h2{
+    display: inline;
+}
+
+input {
+    width: 75px;
+    padding: 10px;
+    margin: 5px 0;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-shadow: 2px 2px 2px #ddd;
+}
+
+select {
+    width: 300px;
+    padding: 10px;
+    margin: 5px 0;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-shadow: 2px 2px 2px #ddd;
+}
+
+button {
+    font-family: "Arial", sans-serif;
+    font-size: 16px;
+    color: #fff;
+    background-color: #4CAF50;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
