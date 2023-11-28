@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Homework 9</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/interactjs@1.10.11"></script>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="equation-selector">
+        <h2>Choose a Stochastic differential equation:</h2>
+        <select id="equationSelect">
+            <option value="null"></option>
+            <option value="ab">Arithmetic Brownian</option>
+            <option value="gb">Geometric Brownian (Black–Scholes)</option>
+            <option value="ou">Ornstein–Uhlenbeck (mean-reverting)</option>
+            <option value="v">Vasicek</option>
+            <option value="hw">Hull–White</option>
+            <option value="cir">Cox–Ingersoll–Ross</option>
+            <option value="bk">Black–Karasinski</option>
+            <option value="h">Heston</option>
+            <option value="cm">Chen model</option>
+        </select>
+    </div>
+    <div id="ab_div" style="display: none;">
+        <p><label for="ab_m">M (number of Systems):</label>
+            <input id="ab_m" type="number" value="25" min="1" max="100" step="1">
+        </p>
+        <p><label for="ab_n">N (number of Attacks):</label>
+            <input id="ab_n" type="number" value="100" min="1" max="250" step="1">
+        </p>
+        <p><label for="ab_mu">Drift:</label>
+            <input id="ab_mu" type="number" value="0.1" min="0.05" max="0.15" step="0.01">
+        </p>
+        <p><label for="ab_sigma">Volatility:</label>
+            <input id="ab_sigma" type="number" value="0.2" min="0.15" max="0.40" step="0.01">
+        </p>
+        <p><label for="ab_dt">Time Increment:</label>
+            <input id="ab_dt" type="number" value="0.01" readonly>
+        </p>
+        <button id="ab_button" onclick="arithmetic_brownian();">Generate</button>
+    </div>
+    <div id="gb_div" style="display: none;">
+        <p><label for="gb_m">M (number of Systems):</label>
+            <input id="gb_m" type="number" value="25" min="1" max="100" step="1">
+        </p>
+        <p><label for="gb_n">N (number of Attacks):</label>
+            <input id="gb_n" type="number" value="100" min="1" max="250" step="1">
+        </p>
+        <p><label for="gb_mu">Drift:</label>
+            <input id="gb_mu" type="number" value="0.1" min="0.05" max="0.15" step="0.01">
+        </p>
+        <p><label for="gb_sigma">Volatility:</label>
+            <input id="gb_sigma" type="number" value="0.2" min="0.15" max="0.40" step="0.01">
+        </p>
+        <p><label for="gb_dt">Time Increment:</label>
+            <input id="gb_dt" type="number" value="0.01" readonly>
+        </p>
+        <button id="gb_button" onclick="geometric_brownian();">Generate</button>
+    </div>
+    <div id="ou_div" style="display: none;">
+        <p><label for="ou_m">M (number of Systems):</label>
+            <input id="ou_m" type="number" value="25" min="1" max="100" step="1">
+        </p>
+        <p><label for="ou_n">N (number of Attacks):</label>
+            <input id="ou_n" type="number" value="100" min="1" max="250" step="1">
+        </p>
+        <p><label for="ou_sigma">Volatility:</label>
+            <input id="ou_sigma" type="number" value="0.2" min="0.15" max="0.40" step="0.01">
+        </p>
+        <p><label for="ou_theta">Reversion Coefficient:</label>
+            <input id="ou_theta" type="number" value="0.2" min="0.1" max="0.5" step="0.1">
+        </p>
+        <p><label for="ou_dt">Time Increase:</label>
+            <input id="ou_dt" type="number" value="0.01" readonly>
+        </p>
+        <button id="ou_button" onclick="ornstein_uhlenbeck();">Generate</button>
+    </div>
+    <div id="v_div" style="display: none;">
+        <p><label for="v_m">M (number of Systems):</label>
+            <input id="v_m" type="number" value="25" min="1" max="100" step="1">
+        </p>
+        <p><label for="v_n">N (number of Attacks):</label>
+            <input id="v_n" type="number" value="100" min="1" max="250" step="1">
+        </p>
+        <p><label for="v_sigma">Interest rate Volatility:</label>
+            <input id="v_sigma" type="number" value="0.02" min="0" max="0.2" step="0.01">
+        </p>
+        <p><label for="v_theta">Equilibrium Interest Rate:</label>
+            <input id="v_theta" type="number" value="0.05" min="0" max="0.1" step="0.01">
+        </p>
+        <p><label for="v_kappa">Mean-reversion Coefficient:</label>
+            <input id="v_kappa" type="number" value="0.4" min="0" max="1" step="0.1">
+        </p>
+        <p><label for="v_dt">Time Increment:</label>
+            <input id="v_dt" type="number" value="0.01" readonly>
+        </p>
+        <button id="v_button" onclick="vasicek();">Generate</button>
+    </div>
+    <div id="hw_div" style="display: none;">
+        <p><label for="hw_m">M (number of Systems):</label>
+            <input id="hw_m" type="number" value="25" min="1" max="100" step="1">
+        </p>
+        <p><label for="hw_n">N (number of Attacks):</label>
+            <input id="hw_n" type="number" value="100" min="1" max="250" step="1">
+        </p>
+        <p><label for="hw_sigma">Volatility:</label>
+            <input id="hw_sigma" type="number" value="0.02" min="0" max="0.2" step="0.01">
+        </p>
+        <p><label for="hw_theta">Long-Term Mean of the Interest Rate:</label>
+            <input id="hw_theta" type="number" value="0.03" min="0" max="0.1" step="0.01">
+        </p>
+        <p><label for="hw_a">Mean-Reversion Coefficient:</label>
+            <input id="hw_a" type="number" value="0.02" min="0" max="0.1" step="0.01">
+        </p>
+        <p><label for="hw_dt">Time Increment:</label>
+            <input id="hw_dt" type="number" value="0.01" readonly>
+        </p>
+        <button id="hw_button" onclick="hull_white();">Generate</button>
+    </div>
+    <div id="cir_div" style="display: none;">
+        <p><label for="cir_m">M (number of Systems):</label>
+            <input id="cir_m" type="number" value="25" min="1" max="100" step="1">
+        </p>
+        <p><label for="cir_n">N (number of Attacks):</label>
+            <input id="cir_n" type="number" value="100" min="1" max="250" step="1">
+        </p>
+        <p><label for="cir_sigma">Interest rate Volatility:</label>
+            <input id="cir_sigma" type="number" value="0.02" min="0" max="0.2" step="0.01">
+        </p>
+        <p><label for="cir_theta">Equilibrium Interest Rate:</label>
+            <input id="cir_theta" type="number" value="0.05" min="0" max="0.1" step="0.01">
+        </p>
+        <p><label for="cir_kappa">Mean-reversion Coefficient:</label>
+            <input id="cir_kappa" type="number" value="0.1" min="0" max="1" step="0.1">
+        </p>
+        <p><label for="cir_dt">Time Increment:</label>
+            <input id="cir_dt" type="number" value="0.01" readonly>
+        </p>
+        <button id="cir_button" onclick="cox_ingersoll_ross();">Generate</button>
+    </div>
+    <div id="bk_div" style="display: none;">
+        <p><label for="bk_m">M (number of Systems):</label>
+            <input id="bk_m" type="number" value="25" min="1" max="100" step="1">
+        </p>
+        <p><label for="bk_n">N (number of Attacks):</label>
+            <input id="bk_n" type="number" value="100" min="1" max="250" step="1">
+        </p>
+        <p><label for="bk_sigma">Volatility:</label>
+            <input id="bk_sigma" type="number" value="0.02" min="0" max="0.2" step="0.01">
+        </p>
+        <p><label for="bk_theta">Long-Term Mean of the Interest Rate:</label>
+            <input id="bk_theta" type="number" value="0.03" min="0" max="0.1" step="0.01">
+        </p>
+        <p><label for="bk_a">Mean-Reversion Coefficient:</label>
+            <input id="bk_a" type="number" value="0.1" min="0" max="1" step="0.1">
+        </p>
+        <p><label for="bk_dt">Time Increment:</label>
+            <input id="bk_dt" type="number" value="0.01" readonly>
+        </p>
+        <button id="bk_button" onclick="black_karasinski();">Generate</button>
+    </div>
+    <div id="h_div" style="display: none;">
+        <p><label for="h_m">M (number of Systems):</label>
+            <input id="h_m" type="number" value="25" min="1" max="100" step="1">
+        </p>
+        <p><label for="h_n">N (number of Attacks):</label>
+            <input id="h_n" type="number" value="100" min="1" max="250" step="1">
+        </p>
+        <p><label for="h_mu">Drift Rate:</label>
+            <input id="h_mu" type="number" value="0.1" min="0.05" max="0.15" step="0.01">
+        </p>
+        <p><label for="h_sigma">Volatility:</label>
+            <input id="h_sigma" type="number" value="0.3" min="0.15" max="0.40" step="0.01">
+        </p>
+        <p><label for="h_theta">Long-Term Mean of Volatility:</label>
+            <input id="h_theta" type="number" value="0.03" min="0" max="0.1" step="0.01">
+        </p>
+        <p><label for="h_kappa">Mean-Reversion Coefficient for Volatility:</label>
+            <input id="h_kappa" type="number" value="0.5" min="0.1" max="0.9" step="0.1">
+        </p>
+        <p><label for="h_rho">Correlation Coefficient:</label>
+            <input id="h_rho" type="number" value="-0.5" min="-1" max="1" step="0.1">
+        </p>
+        <p><label for="h_dt">Time Increment:</label>
+            <input id="h_dt" type="number" value="0.01" readonly>
+        </p>
+        <button id="h_button" onclick="heston();">Generate</button>
+    </div>
+    <div id="cm_div" style="display: none;">
+        <p><label for="cm_m">M (number of Systems):</label>
+            <input id="cm_m" type="number" value="25" min="1" max="100" step="1">
+        </p>
+        <p><label for="cm_n">N (number of Attacks):</label>
+            <input id="cm_n" type="number" value="100" min="1" max="250" step="1">
+        </p>
+        <p><label for="cm_mu">Drift Rate:</label>
+            <input id="cm_mu" type="number" value="0.1" min="0.05" max="0.15" step="0.01">
+        </p>
+        <p><label for="cm_sigma">Volatility:</label>
+            <input id="cm_sigma" type="number" value="0.3" min="0.15" max="0.40" step="0.01">
+        </p>
+        <p><label for="cm_theta">Long-Term Mean of Volatility:</label>
+            <input id="cm_theta" type="number" value="0.2" min="0" max="1" step="0.1">
+        </p>
+        <p><label for="cm_beta">Power of the Instantaneous Volatility:</label>
+            <input id="cm_beta" type="number" value="0.8" min="0" max="1" step="0.1">
+        </p>
+        <p><label for="cm_kappa">Mean-Reversion Coefficient for Volatility:</label>
+            <input id="cm_kappa" type="number" value="1.5" min="0" max="2" step="0.1">
+        </p>
+        <p><label for="cm_dt">Time Increment:</label>
+            <input id="cm_dt" type="number" value="0.01" readonly>
+        </p>
+        <button id="cm_button" onclick="chen_model();">Generate</button>
+    </div>
+    
+    <div id="chart_div" class="chart" style="width: 800px; height: 400px; top: 100px; left: 500px; display: none;">
+        <canvas id="myChart"></canvas>
+    </div>
+    <div id="chart2_div" class="chart" style="width: 800px; height: 400px; top: 600px; left: 500px; display: none;">
+        <canvas id="myChart2"></canvas>
+    </div>
+    <script src="script.js"></script>
+
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
